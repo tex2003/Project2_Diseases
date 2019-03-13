@@ -7,7 +7,8 @@ CREATE TABLE disease_data (
   State VARCHAR(50),
   City VARCHAR(50),
   PeriodStartDate DATE,
-  PeriodEndDate DATE
+  PeriodEndDate DATE,
+  Count Int
 );
 
 
