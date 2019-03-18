@@ -66,7 +66,7 @@ def state(disease):
 
     #Query for Specific Disease => gives Data for that disease by state (all time)
     results = db.session.query(Disease_Data.Disease,Disease_Data.State,func.sum(Disease_Data.CountValue),func.sum(Disease_Data.Fatalities),Disease_Data.Year).\
-    group_by(Disease_Data.State).filter(Disease_Data.Disease == disease).all()
+    group_by(Disease_Data.State).group_by(Disease_Data.Year).filter(Disease_Data.Disease == disease).all()
                                     
 
     disease_data = []
@@ -76,6 +76,7 @@ def state(disease):
         disease_dict["State"] = result[1]
         disease_dict["Count"] = result[2]
         disease_dict["Fatalities"] = result[3]
+        disease_dict["Year"] = result[4]
         disease_data.append(disease_dict)
 
     return jsonify(disease_data)
