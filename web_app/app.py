@@ -1,76 +1,143 @@
+import os
 import numpy as np
-
+import pandas as pd
 import sqlalchemy
+import pymysql
+pymysql.install_as_MySQLdb()
+
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, func
+from sqlalchemy import extract
 
-from flask import Flask, jsonify, render_template
+from flask import (
+    Flask,
+    render_template,
+    jsonify,
+    request,
+    redirect)
+
+app = Flask(__name__)
 
 
-#################################################
-# Database Setup
-#################################################
+
+# app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///../ETL/diseases.sqlite"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///diseases.sqlite"
 engine = create_engine("sqlite:///diseases.sqlite")
+db = SQLAlchemy(app)
 
 # reflect an existing database into a new model
 Base = automap_base()
 # reflect the tables
-Base.prepare(engine, reflect=True)
+Base.prepare(db.engine, reflect=True)
 
-# Save reference to the table
-Passenger = Base.classes.diseases
-
-# Create our session (link) from Python to the DB
+# Save references to each table
+Disease_Data = Base.classes.diseases
 session = Session(engine)
-
-#################################################
-# Flask Setup
-#################################################
-app = Flask(__name__)
+# from models.py import Disease
 
 
-#################################################
-# Flask Routes
-#################################################
 
 @app.route("/")
-def index():
-    """List all available api routes."""
-    return (
-        render_template("index.html")
-    )
+def home():
+    return "Welcome to my Diseases page!"
 
 
-@app.route("/api/v1.0/names")
-def names():
-    """Return a list of all passenger names"""
-    # Query all passengers
-    results = session.query(Passenger.name).all()
+@app.route("/basic")
+def basic():
+    sel = [
+        Disease_Data.Disease,
+        Disease_Data.Year,
+        Disease_Data.CountValue
+    ]
+# session.query(Table.column, func.count(Table.column)).group_by(Table.column).all()
+    # results = db.session.query(*sel,func.sum(Disease_Data.CountValue)).group_by(Disease_Data.Disease).all()
+    # results = db.session.query(*sel).group_by(Disease_Data.Disease).all()
+    results = db.session.query(*sel).all()
 
-    # Convert list of tuples into normal list
-    all_names = list(np.ravel(results))
+    disease_data = []
+    for result in results:
+        disease_dict = {}
+        disease_dict["Disease"] = result[0]
+        disease_dict["Year"] = result[1]
+        disease_dict["Count"] = result[2]
+        disease_data.append(disease_dict)
 
-    return jsonify(all_names)
+    return jsonify(disease_data)
+
+@app.route("/data/<disease>")
+def api(disease):
+    sel = [
+        Disease_Data.Disease,
+        Disease_Data.State,
+        Disease_Data.PeriodEndDate,
+        Disease_Data.Fatalities,
+        Disease_Data.CountValue
+    ]
+
+    results = db.session.query(*sel).filter(Disease_Data.Disease == disease).all()
+    
+    disease_data = []
+    for result in results:
+        disease_dict = {}
+        disease_dict["Disease"] = result[0]
+        disease_dict["State"] = result[1]
+        disease_dict["PeriodEnd"] = result[2]
+        disease_dict["Fatalities"] = result[3]
+        disease_dict["Count"] = result[4]
+        disease_data.append(disease_dict)
+
+    return jsonify(disease_data)
+
+@app.route("/api/<year>")
+def api(year):
+        sel = [
+        Disease_Data.Disease,
+        Disease_Data.State,
+        Disease_Data.PeriodEndDate,
+        Disease_Data.Fatalities,
+        Disease_Data.CountValue
+    ]
+    # Need to make query select specific year
+    # results = db.session.query(*sel).filter(extract('year',Disease_Data.PeriodEndDate) == year).all()
+    results = db.session.query(*sel).filter(Disease_Data.Year == year).all()
+
+    disease_data = []
+    for result in results:
+        disease_dict = {}
+        disease_dict["Disease"] = result[0]
+        disease_dict["State"] = result[1]
+        disease_dict["PeriodEnd"] = result[2]
+        disease_dict["Fatalities"] = result[3]
+        disease_dict["Count"] = result[4]
+        disease_data.append(disease_dict)
+
+    return jsonify(disease_data)
+
+# @app.route("/test")
+# def test():
+#     sel = [
+#         Disease.Disease,
+#         Disease.State,
+#         Disease.Year,
+#         Disease.Fatalities,
+#         Disease.CountValue
+#     ]
+
+#     results = db.session.query(*sel).all()
+
+#     disease_data = [{
+#         "disease":result[0],
+#         "state":result[1],
+#         "year":result[2],
+#         "fatalities":result[3],
+#         "count":result[4]
+#     } for result in results]
 
 
-@app.route("/api/v1.0/passengers")
-def passengers():
-    """Return a list of passenger data including the name, age, and sex of each passenger"""
-    # Query all passengers
-    results = session.query(Passenger).all()
-
-    # Create a dictionary from the row data and append to a list of all_passengers
-    all_passengers = []
-    for passenger in results:
-        passenger_dict = {}
-        passenger_dict["name"] = passenger.name
-        passenger_dict["age"] = passenger.age
-        passenger_dict["sex"] = passenger.sex
-        all_passengers.append(passenger_dict)
-
-    return jsonify(all_passengers)
+#     return jsonify(disease_data)
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    app.run()
