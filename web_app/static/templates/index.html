@@ -1,1 +1,144 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>Preventable Diseases</title>
+
+    <!-- Boostrap Stylesheet -->
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css" media="screen">
+
+    <!-- Our own CSS stylesheet -->
+    <link rel="stylesheet" href="../static/css/styles.css" media="screen">
+
+  </head>
+
+  <body>
+    <!-- Start of navbar -->
+    <nav class="navbar navbar-default">
+      <div class="container-fluid navbar-custom">
+
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="row">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+              <span class="sr-only">Toggle Navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <div class="col-xs-9 phone-nav">
+            </div>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right navbar-right-custom">
+              <li><a href="#chart_1">Graph 1</a></li>
+              <li><a href="#chart_2">Graph 2</a></li>
+              <li><a href="#chart_3">Graph 3</a></li>
+            </ul>
+          </div><!-- /.navbar-collapse -->
+        </div>
+      </div><!-- /.container-fluid -->
+    </nav>
+    <!-- End of navbar -->
+
+    <!-- Start of container -->
+    <div class="container">
+        <section class="row">
+          <div class="col-md-12">
+              <h1 class="description-title">Vaccine Preventable Diseases</h1> 
+          </div>
+        </section>
+    </div>
+    <div class="container">
+        <section class="row">
+          <div class="col-md-12">
+            <article class="description-content">
+              <a id="chart_1"><h1 class="description-header">Diseases Graph 1</h1></a>
+              <hr class="description-hr"/> 
+              <p>This graph displays the number of cases for each disease by year. The vertical lines are indicators of when vaccines were introduced.</p>
+              <div class="chart_1"></div>
+            </article>
+          </div>
+        </section>
+      </div>
+    <div class="container">
+      <section class="row">
+        <div class="col-md-12">
+          <article class="description-content">
+            <a id="chart_2"><h1 class="description-header">Diseases Graph 2</h1></a>
+            <hr class="description-hr"/>
+            <p>Select the disease and year to view the various cases across the US.</p>
+            <p>Choose a Disease:</p><select id="selDataset" onchange="getData(this.value)">
+                <option value="Diptheria">Diptheria</option>
+                <option value="Viral hepatitis, type A">Hep A</option>
+                <option value="Viral hepatitis type B">Hep B</option>
+                <option value="Measles">Measles</option>
+                <option value="Mumps">Mumps</option>
+                <option value="Pertussis">Pertussis</option>
+                <option value="Rubella">Rubella</option>
+                <option value="SmallPox">SmallPox</option>
+                <option value="Tuberculosis">Tuberculosis</option>
+                <option value="Typhoid">Typhoid</option>
+                <option value="Varicella">Varicella</option>
+              </select>
+              <p></p>
+              <form class="form-inline">
+                  <div class="form-group">
+                    <p>Choose a Year:</p>
+                    <input type="text" class="form-control" id="year" placeholder="Between 1900-2014">
+                    <button id="submit" type="submit" class="btn btn-default">Plot</button>
+                  </div> 
+              </form>
+            <div class="chart_2"></div>
+          </article>
+        </div>
+      </section>
+    </div>
+    <div class="container">
+      <section class="row">
+        <div class="col-md-12">
+          <article class="description-content">
+            <a id="chart_3"><h1 class="description-header">Diseases Graph 3</h1></a>
+            <hr class="description-hr"/>
+            <p>Select the disease you want to view the cases by state.</p>
+            <p>Choose a Disease:</p><select id="selDataset" onchange="getData(this.value)">
+                <option value="Diptheria">Diptheria</option>
+                <option value="Viral hepatitis, type A">Hep A</option>
+                <option value="Viral hepatitis type B">Hep B</option>
+                <option value="Measles">Measles</option>
+                <option value="Mumps">Mumps</option>
+                <option value="Pertussis">Pertussis</option>
+                <option value="Rubella">Rubella</option>
+                <option value="SmallPox">SmallPox</option>
+                <option value="Tuberculosis">Tuberculosis</option>
+                <option value="Typhoid">Typhoid</option>
+                <option value="Varicella">Varicella</option>
+              </select>
+              <div class="chart_3"></div>
+          </article>
+        </div>
+      </section>
+    </div>
+    <!-- End of container -->
+
+    <!-- Start of footer -->
+    <footer class="footer navbar-fixed-bottom">
+      <div class="two-toned-footer-color"></div>
+    </footer>
+    <!-- End of footer -->
+
+    <!-- jQuery CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script type='text/javascript' src='../static/js/test/app.js'></script>
+    <!-- Bootstrap CDN -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  </body>
+
+</html>
