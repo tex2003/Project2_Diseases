@@ -43,6 +43,7 @@ session = Session(engine)
 def home():
     return render_template("index.html")
 
+## Route for Vaccine dates
 @app.route("/vaccine")
 def vaccine():
     vaccine_data = [{
@@ -79,6 +80,7 @@ def basic():
 
     return jsonify(disease_data)
 
+## Route for state by state data on specific disease
 @app.route("/state/<disease>")
 def state(disease):
 
@@ -99,9 +101,9 @@ def state(disease):
 
     return jsonify(disease_data)
 
-
+#Route for every year of specific disease
 @app.route("/year/<disease>")
-def year(disease):
+def yearly(disease):
 
     #Query for Specific Disease => gives Data for that disease by year (all states)
     results = db.session.query(Disease_Data.Disease,Disease_Data.Year,func.sum(Disease_Data.CountValue),func.sum(Disease_Data.Fatalities),Disease_Data.Year).\
@@ -119,8 +121,9 @@ def year(disease):
 
     return jsonify(disease_data)
 
+## Route for every instance of every disease by specific year
 @app.route('/<int:year>')
-def year_disease(year):
+def year(year):
 
     #Query for Specific Year => gives Data for that year by disease (all states)
     results = db.session.query(Disease_Data.Disease,func.sum(Disease_Data.CountValue),func.sum(Disease_Data.Fatalities)).\
@@ -133,6 +136,45 @@ def year_disease(year):
         disease_dict["Disease"] = result[0]
         disease_dict["Count"] = result[1]
         disease_dict["Fatalities"] = result[2]
+        disease_data.append(disease_dict)
+
+    return jsonify(disease_data)
+
+## Route for every Disease for specific year & state
+@app.route('/<int:year>/<state>')
+def year_state(year, state):
+
+    #Query for Specific Year & State => gives Data for all registered diseases matching year & state
+    results = db.session.query(Disease_Data.Disease,func.sum(Disease_Data.CountValue),func.sum(Disease_Data.Fatalities)).\
+    group_by(Disease_Data.Disease).filter(Disease_Data.Year == year).filter(Disease_Data.State == state).all()
+                                    
+
+    disease_data = []
+    for result in results:
+        disease_dict = {}
+        disease_dict["Disease"] = result[0]
+        disease_dict["Count"] = result[1]
+        disease_dict["Fatalities"] = result[2]
+        disease_data.append(disease_dict)
+
+    return jsonify(disease_data)
+
+## Route for every State by disease and year:
+@app.route('/<disease>/<int:year>')
+def year_disease(disease, year):
+
+    #Query for Specific Year & State => gives Data for all registered diseases matching year & state
+    results = db.session.query(Disease_Data.Disease,Disease_Data.State,func.sum(Disease_Data.CountValue),func.sum(Disease_Data.Fatalities)).\
+    group_by(Disease_Data.State).filter(Disease_Data.Year == year).filter(Disease_Data.Disease == disease).all()
+                                    
+
+    disease_data = []
+    for result in results:
+        disease_dict = {}
+        disease_dict["Disease"] = result[0]
+        disease_dict["State"] = result[1]
+        disease_dict["Count"] = result[2]
+        disease_dict["Fatalities"] = result[3]
         disease_data.append(disease_dict)
 
     return jsonify(disease_data)
