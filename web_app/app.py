@@ -123,8 +123,8 @@ def year(disease):
 def year_disease(year):
 
     #Query for Specific Year => gives Data for that year by disease (all states)
-    results = db.session.query(Disease_Data.Disease,func.sum(Disease_Data.CountValue),func.sum(Disease_Data.Fatalities),Disease_Data.State).\
-    group_by(Disease_Data.State).group_by(Disease.Disease).filter(Disease_Data.Year == year).all()
+    results = db.session.query(Disease_Data.Disease,func.sum(Disease_Data.CountValue),func.sum(Disease_Data.Fatalities)).\
+    group_by(Disease_Data.Disease).filter(Disease_Data.Year == year).all()
                                     
 
     disease_data = []
@@ -133,7 +133,6 @@ def year_disease(year):
         disease_dict["Disease"] = result[0]
         disease_dict["Count"] = result[1]
         disease_dict["Fatalities"] = result[2]
-        disease_dict["State"] = result[3]
         disease_data.append(disease_dict)
 
     return jsonify(disease_data)
