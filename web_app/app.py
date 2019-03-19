@@ -41,8 +41,26 @@ session = Session(engine)
 
 @app.route("/")
 def home():
-    return "Welcome to my Diseases page!"
+    return render_template("index.html")
 
+@app.route("/vaccine")
+def vaccine():
+    vaccine_data = [{
+        "diptheria":1920,
+        "hep_b":1982,
+        "hep_a":1995,
+        "measles":1963,
+        "mumps":1967,
+        "pertussis":1930,
+        "rubella":1969,
+        "smallpox":1796,
+        "tetanus":1924,
+        "tuberculosis":1921,
+        "typhoid":1896,
+        "varicella":1995,
+        "yellow_fever":1951
+    }]
+    return jsonify(vaccine_data)
 
 @app.route("/basic")
 def basic():
@@ -105,8 +123,8 @@ def year(disease):
 def year_disease(year):
 
     #Query for Specific Year => gives Data for that year by disease (all states)
-    results = db.session.query(Disease_Data.Disease,func.sum(Disease_Data.CountValue),func.sum(Disease_Data.Fatalities)).\
-    group_by(Disease_Data.Disease).filter(Disease_Data.Year == year).all()
+    results = db.session.query(Disease_Data.Disease,func.sum(Disease_Data.CountValue),func.sum(Disease_Data.Fatalities),Disease_Data.State).\
+    group_by(Disease_Data.State).group_by(Disease.Disease).filter(Disease_Data.Year == year).all()
                                     
 
     disease_data = []
@@ -115,6 +133,7 @@ def year_disease(year):
         disease_dict["Disease"] = result[0]
         disease_dict["Count"] = result[1]
         disease_dict["Fatalities"] = result[2]
+        disease_dict["State"] = result[3]
         disease_data.append(disease_dict)
 
     return jsonify(disease_data)
