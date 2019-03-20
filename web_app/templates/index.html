@@ -13,7 +13,7 @@
 
     <!-- Our own CSS stylesheet -->
     <link rel="stylesheet" href="../static/css/styles.css" media="screen">
-
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   </head>
 
   <body>
@@ -59,9 +59,9 @@
         <section class="row">
           <div class="col-md-12">
             <article class="description-content">
-              <a id="chart"><h1 class="description-header">Diseases Graph 1</h1></a>
+              <a id="chart"><h1 class="description-header">Trends of each Disease over the Years</h1></a>
               <hr class="description-hr"/> 
-              <p>This graph displays the number of cases for each disease by year. The vertical lines are indicators of when vaccines were introduced.</p>
+              <p>This graph displays the number of cases for each disease by year.</p>
 
               <div class="chart_1"></div>
             </article>
@@ -72,31 +72,17 @@
       <section class="row">
         <div class="col-md-12">
           <article class="description-content">
-            <a id="chart_2"><h1 class="description-header">Diseases Graph 2</h1></a>
+            <a id="chart_2"><h1 class="description-header">Cases of each Disease recorded by Year</h1></a>
             <hr class="description-hr"/>
             <p>Select the disease and year to view the various cases across the US.</p>
-            <p>Choose a Disease:</p><select id="selDataset" onchange="getData(this.value)">
-                <option value="Diptheria">Diptheria</option>
-                <option value="Viral hepatitis, type A">Hep A</option>
-                <option value="Viral hepatitis type B">Hep B</option>
-                <option value="Measles">Measles</option>
-                <option value="Mumps">Mumps</option>
-                <option value="Pertussis">Pertussis</option>
-                <option value="Rubella">Rubella</option>
-                <option value="SmallPox">SmallPox</option>
-                <option value="Tuberculosis">Tuberculosis</option>
-                <option value="Typhoid">Typhoid</option>
-                <option value="Varicella">Varicella</option>
-              </select>
-              <p></p>
-              <form class="form-inline">
+               <form class="form-inline">
                   <div class="form-group">
                     <p>Choose a Year:</p>
                     <input type="text" class="form-control" id="year" placeholder="Between 1900-2014">
                     <button id="submit" type="submit" class="btn btn-default">Plot</button>
                   </div> 
               </form>
-            <div class="chart_2"></div>
+            <div id="plot"></div>
           </article>
         </div>
       </section>
